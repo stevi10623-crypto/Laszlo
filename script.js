@@ -499,19 +499,24 @@ function setupMusicPlayer(autoplay) {
     if (!btn || !audio) return;
 
     btn.addEventListener('click', () => {
+        // Achievement: First interaction!
         if (audio.paused) {
+            // Big tech: Try to play with a guaranteed source
+            audio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
+            audio.load();
             audio.play().then(() => {
                 btn.classList.add('playing');
                 btn.innerHTML = '⏸ Stop the Party';
                 startParty();
+                speakLaszlo('Let the party begin!');
             }).catch(e => {
                 console.error("Audio playback blocked", e);
-                btn.innerHTML = '⚠️ Click again to start';
+                btn.innerHTML = '⚠️ Click to UNMUTE';
             });
         } else {
             audio.pause();
             btn.classList.remove('playing');
-            btn.innerHTML = '🎵 Play Hungarian Music';
+            btn.innerHTML = '🎵 Restart Hungarian Music';
         }
     });
 
