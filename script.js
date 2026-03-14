@@ -297,17 +297,19 @@ function initNeuralLaszlo() {
     btn.style.marginRight = 'auto';
     zone.appendChild(btn);
 
-    const responses = [
-        "Hungarian wine is the best, obviously.",
-        "Del Boy says: Lovely Jubbly!",
-        "Watch out, I am about to sneeze.",
-        "Where did I hide that candy?",
-        "Don't worry about my driving, I'm okay... I think."
-    ];
+    const numNeuralClips = 15;
+    let currentNeuralAudio = null;
 
     btn.addEventListener('click', () => {
-        const msg = responses[Math.floor(Math.random() * responses.length)];
-        speakLaszlo(msg);
+        // Pick a random clip from 1 to 15
+        const clipNumber = Math.floor(Math.random() * numNeuralClips) + 1;
+        
+        if (currentNeuralAudio) {
+            currentNeuralAudio.pause();
+        }
+        currentNeuralAudio = new Audio(`audio/neural_${clipNumber}.mp3`);
+        currentNeuralAudio.play().catch(e => console.log("Neural audio blocked until interaction", e));
+        
         launchConfetti();
         btn.classList.add('pulse-glow');
         setTimeout(() => btn.classList.remove('pulse-glow'), 1000);
