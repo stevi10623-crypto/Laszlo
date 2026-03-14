@@ -12,8 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Setup Music Audio (autoplay)
     setupMusicPlayer(true);
 
-    // Floating "I am Laszlo" text
+    // Floating "I am Laszlo" text (clickable with voice!)
     createFloatingTexts();
+
+    // Setup lightbox for gallery
+    setupLightbox();
 
     // Initialize custom glowing cursor
     initCustomCursor();
@@ -73,9 +76,29 @@ function initScrollAnimations() {
     sr.reveal('.message-card', { origin: 'top', distance: '40px', duration: 1200 });
 }
 
+function speakLaszlo() {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance('I am Laszlo');
+    utterance.rate = 0.7; // Slow and deep
+    utterance.pitch = 0.4; // Very deep voice
+    utterance.volume = 1;
+    
+    // Try to find a deep male voice
+    const voices = synth.getVoices();
+    const deepVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred')) 
+                   || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('male'))
+                   || voices[0];
+    if (deepVoice) utterance.voice = deepVoice;
+    
+    synth.speak(utterance);
+}
+
 function createFloatingTexts() {
     const phrases = ['I am Laszlo', 'I am Laszlo! 🇭🇺', 'I AM LASZLO', 'I am Laszlo 🍷', 'I am Laszlo! 💃', 'I am Laszlo 🥂'];
     const colors = ['#FF2E4C', '#1E8F43', '#ffa07a', '#ffffff', '#FFD700', '#FF69B4'];
+
+    // Pre-load voices
+    window.speechSynthesis.getVoices();
 
     phrases.forEach((text, i) => {
         const el = document.createElement('div');
@@ -87,11 +110,24 @@ function createFloatingTexts() {
         el.style.fontFamily = 'Outfit, sans-serif';
         el.style.position = 'fixed';
         el.style.zIndex = '50';
-        el.style.pointerEvents = 'none';
+        el.style.pointerEvents = 'auto'; // Make clickable!
+        el.style.cursor = 'pointer';
         el.style.textShadow = '0 0 20px rgba(255,46,76,0.5)';
         el.style.whiteSpace = 'nowrap';
         el.style.opacity = '0.85';
+        el.style.userSelect = 'none';
+        el.style.transition = 'transform 0.2s ease';
         document.body.appendChild(el);
+
+        // Click to hear "I am Laszlo" in a deep voice
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            speakLaszlo();
+            // Visual feedback
+            el.style.transform = 'scale(1.8)';
+            el.style.color = '#FFD700';
+            setTimeout(() => { el.style.transform = 'scale(1)'; }, 400);
+        });
 
         // Random starting position
         let x = Math.random() * (window.innerWidth - 200);
@@ -106,7 +142,6 @@ function createFloatingTexts() {
             // Bounce off edges (DVD screensaver style!)
             if (x <= 0 || x >= window.innerWidth - el.offsetWidth) {
                 dx = -dx;
-                // Change color on bounce for fun
                 el.style.color = colors[Math.floor(Math.random() * colors.length)];
             }
             if (y <= 0 || y >= window.innerHeight - el.offsetHeight) {
@@ -119,6 +154,29 @@ function createFloatingTexts() {
             requestAnimationFrame(animate);
         }
         animate();
+    });
+}
+
+function setupLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    if (!lightbox) return;
+
+    // Close lightbox on click
+    lightbox.addEventListener('click', () => {
+        lightbox.classList.remove('active');
+    });
+
+    lightboxClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        lightbox.classList.remove('active');
+    });
+
+    // Close with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') lightbox.classList.remove('active');
     });
 }
 
@@ -199,13 +257,23 @@ function loadGalleryImages() {
         item.appendChild(img);
         gallery.appendChild(item);
 
-        // Apply 3D VanillTilt effect to the gallery item
+        // Click to enlarge in lightbox
+        item.addEventListener('click', () => {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            if (lightbox && lightboxImg) {
+                lightboxImg.src = img.src;
+                lightbox.classList.add('active');
+            }
+        });
+
+        // Apply 3D VanillaTilt effect to the gallery item
         VanillaTilt.init(item, {
-            max: 15,
+            max: 8,
             speed: 400,
             glare: true,
-            "max-glare": 0.4,
-            scale: 1.05
+            "max-glare": 0.3,
+            scale: 1.02
         });
     });
 

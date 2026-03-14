@@ -317,28 +317,31 @@ h1, h2, h3, .btn, .badge {
 
 /* Gallery Section */
 .gallery-section {
-    padding: 8rem 0; /* More breathing room */
+    padding: 8rem 0;
     text-align: center;
     background: linear-gradient(to bottom, rgba(255, 46, 76, 0.05), var(--bg-color));
 }
 
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 3rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
     padding: 2rem 0;
 }
 
 .gallery-item {
-    border-radius: 20px;
+    border-radius: 16px;
     position: relative;
     box-shadow: var(--shadow-sm);
     background: var(--glass-bg);
-    padding: 0.5rem;
-    transform-style: preserve-3d; /* Required for VanillaTilt popout */
+    padding: 0;
+    overflow: hidden;
+    transform-style: preserve-3d;
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(5px);
     transition: box-shadow 0.4s ease;
+    aspect-ratio: 4/3;
+    cursor: pointer;
 }
 
 .gallery-item:hover {
@@ -348,17 +351,69 @@ h1, h2, h3, .btn, .badge {
 
 .gallery-image {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
-    border-radius: 15px;
+    border-radius: 16px;
     display: block;
-    transform: translateZ(30px); /* 3D pop out effect on tilt */
-    filter: brightness(0.9) contrast(1.1);
-    transition: filter 0.3s ease;
+    filter: brightness(0.95) contrast(1.05);
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 .gallery-item:hover .gallery-image {
-    filter: brightness(1.05) contrast(1.1);
+    filter: brightness(1.1) contrast(1.1);
+    transform: scale(1.05);
+}
+
+/* Lightbox Modal */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+}
+
+.lightbox.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 2rem; right: 2rem;
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 10001;
+}
+
+.lightbox-close:hover {
+    transform: rotate(90deg) scale(1.2);
 }
 
 /* Messages Section */
