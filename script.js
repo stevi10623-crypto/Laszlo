@@ -746,56 +746,80 @@ function launchConfetti() {
 function initHungarianTranslator() {
     const interactiveBoxes = document.querySelectorAll('.timeline-content, .comedy-card, .message-card');
     
-    // Basic mapping for demonstration (representative translations)
+    // Massive dictionary to map English identifiers to fully translated Hungarian PARAGRAPHS
     const translations = {
-        "Business Brilliance": "Üzleti Briliancia",
-        "A Life Well Lived": "Egy Jól Megélt Élet",
-        "A (Terrible) Driver": "Egy (Gyenge) Sofőr",
-        "Sweet Tooth & Quirks": "Édesszájú és Hóbortok",
-        "The \"Hungarian Verdict\"": "A \"Magyar Ítélet\"",
-        "The 3 AM Water Polo Match": "A Hajnali 3 Órás Vízilabda Meccs",
-        "A Good Laugh": "Egy Jó Nevetés",
-        "Mr. Bean": "Bean Úr",
-        "Only Fools and Horses": "Suzi és a többiek",
-        "The Classic \"Laszlo Wince\"": "A Klasszikus \"László-félrearc\"",
-        "A note for Laszlo...": "Üzenet Lászlónak..."
+        "Roots in Hungary": "Egészen Magyarországról érkezett hozzánk, azzal a felejthetetlen, erős akcentussal, amit annyira szeretünk.",
+        "A Passion for Wine": "A szőlőművelés művésze, rangos borászati diplomával. És nem feledkezhetünk meg a konyak iránti szeretetéről sem... amit általában pontosan 3 lime kísér!",
+        "The Infinite Sneeze": "László tartja a történelem legdrámaibb tüsszentésének nem hivatalos világrekordját. Megremeg tőle a ház, megijeszti a szomszédokat, és mindig a rá jellemző elégedett vigyor követi.",
+        "Legendary Candy Stash": "Mindannyian tudjuk, hogy azt mondja 'semmi édesség', mégis valahogy varázsütésre megjelennek a csokipapírok. Ő a cukorkák elrejtésének vitathatatlan nagymestere.",
+        "Master of the Grill": "Mutass neki egy darab húst és egy grillt, és kulináris varázslóvá válik. A titkos összetevője? Egy kis konyak és rengeteg magyar szenvedély.",
+        "Driving Curb": "László nem csak vezet; ő 'érzésből' navigál. Ha egy padkát nem csippentették meg a gumijai, egyáltalán megtörtént a kanyar? A kormányfogása olyan határozott, mint a kézfogása.",
+        "Golfing Legend": "Elüti a labdát... valahova. Általában egy fa vagy egy mókus felé, de mindezt egy profi összpontosításával és egy úriember stílusával teszi.",
+        "Building Connections": "Személyi titkárként dolgozik, mindig szervez és kapcsolatot teremt az emberekkel.",
+        "Bar Scene": "Népszerű bárok megnyitása Long Beach-en és Redondo Beach-en, tereket teremtve az öröm, a bulizás és a közösség számára.",
+        "Business Brilliance": "Sikeres üzletközvetítőként és fúziós-felvásárlási szakemberként tevékenykedik.",
+        "A Life Well Lived": "A Sunset House of Blues és a Braemar Country Club büszke tagja. Küzdősportoló vízilabdázó, a parkettet felszántó versenytáncos, és a lelkes, de talán kevésbé sikeres golfozó... az élet sosem unalmas!",
+        "(Terrible) Driver": "Legyünk őszinték... ő egy borzalmas sofőr. Mindannyian titokban nagyon örülünk, hogy már nem vezet!",
+        "Sweet Tooth": "Komoly gyengéje a cukorka és a csokoládés ostya! De vigyázat, ha túl sokat eszik, kezdődnek a tüsszögő rohamok!",
+        "Hungarian Verdict": "László végső tesztje bármire, hogy elég magyar-e. Az autóktól a kávéig, ha hiányzik belőle a magyar szikra, megkapja a klasszikus László-félrearcot.",
+        "Water Polo Match": "Egyszer egy étteremben só- és borsszórókkal próbálta elmagyarázni a vízilabda stratégiákat. Még mindig nem tudjuk, ki nyert, de az asztal nagyon jól fűszerezett lett.",
+        "A Good Laugh": "A legendás vígjátékok igazi rajongója. Semmi sem jobb egy jó nevetéshez, mint a Mr. Bean, a Szeszélyes évszakok vagy a Két pasi meg egy kicsi.",
+        "Mr. Bean": "Nincs szüksége szavakra ahhoz, hogy ő legyen a legviccesebb ember a világon, akárcsak Lászlónak, amikor egy villanykörtét próbál megjavítani!",
+        "Fools and Horses": "A Del Boy meg sem közelíti László sármját. Bárkit meg tud győzni arról, hogy egy húsz éves autó olyan, mint az új.",
+        "Laszlo Wince": "Az az arc, amit akkor vág, amikor a bor nem elég magyar... a csalódás, a zavarodottság és egy néma ima keveréke egy kis Tokajiért.",
+        "A note for Laszlo": "Oly sok szeretetet és erőt küldünk neked. Olyan sok életet érintettél meg, és ma és mindig ünnepelni akarunk téged!"
     };
 
     interactiveBoxes.forEach(box => {
         box.style.cursor = 'help';
-        box.setAttribute('title', 'Click to hear in Hungarian!');
+        box.setAttribute('title', 'Kattints ide a magyar fordításért! (Click for Hungarian translation)');
         
         box.addEventListener('click', (e) => {
-            const heading = box.querySelector('h3')?.innerText || "";
-            const text = translations[heading] || "Isten hozta Magyarországon!";
+            const innerText = box.innerText;
+            let spokenText = "Isten hozta Magyarországon!"; // Default fallback
             
-            speakLaszlo(text, 'hu-HU');
+            // Find the matching translation based on English keywords
+            for (const [key, translatedParagraph] of Object.entries(translations)) {
+                if (innerText.includes(key)) {
+                    spokenText = translatedParagraph;
+                    break;
+                }
+            }
+            
+            speakLaszlo(spokenText, 'hu-HU');
             
             // Visual feedback
             const originalColor = box.style.borderColor;
+            const originalBg = box.style.backgroundColor;
             box.style.borderColor = '#1E8F43'; // Hungarian Green
-            setTimeout(() => box.style.borderColor = originalColor, 1000);
+            box.style.backgroundColor = 'rgba(30, 143, 67, 0.2)'; 
+            
+            setTimeout(() => {
+                box.style.borderColor = originalColor;
+                box.style.backgroundColor = originalBg;
+            }, 1000);
         });
     });
 }
 
-// Updated speakLaszlo to support language
+// Updated speakLaszlo to clearly define pronunciation language
 function speakLaszlo(customText = 'I am Laszlo', lang = 'en-US') {
     const synth = window.speechSynthesis;
     if (synth.speaking) synth.cancel();
     
     const utterance = new SpeechSynthesisUtterance(customText);
     utterance.lang = lang;
-    utterance.rate = 0.8;
-    utterance.pitch = 0.6;
+    utterance.rate = 0.85; // slightly faster for Hungarian to sound natural
+    utterance.pitch = 0.5;
     
     const voices = synth.getVoices();
     let selectedVoice;
     
     if (lang === 'hu-HU') {
+        // Explicitly look for a Hungarian voice, like 'Mariska' or 'Tamas'
         selectedVoice = voices.find(v => v.lang.startsWith('hu'));
     } else {
-        selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex'));
+        selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred'));
     }
     
     if (selectedVoice) utterance.voice = selectedVoice;
