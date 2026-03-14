@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+<button id="btn">Test TTS</button>
+<script>
+document.getElementById('btn').onclick = () => {
+  const url = 'https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=hu&q=' + encodeURIComponent('Isten hozta Magyarországon!');
+  const a = new Audio(url);
+  a.play();
+}
+</script>
+</body>
+</html>

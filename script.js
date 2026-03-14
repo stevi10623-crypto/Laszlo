@@ -748,26 +748,26 @@ function initHungarianTranslator() {
     
     // Massive dictionary to map English identifiers to fully translated Hungarian PARAGRAPHS
     const translations = {
-        "Roots in Hungary": "Gyökerek Magyarországon. Egészen Magyarországról érkezett hozzánk, azzal a felejthetetlen, erős akcentussal, amit annyira szeretünk.",
-        "A Passion for Wine": "Szenvedély a bor és a konyak iránt. A szőlőművelés művésze, egy rangos borászati diplomával. És nem feledkezhetünk meg a konyak iránti szeretetéről sem, amit általában pontosan három lime kísér!",
-        "The Infinite Sneeze": "A Végtelen Tüsszentés. László tartja a történelem legdrámaibb tüsszentésének nem hivatalos világrekordját. Megremeg tőle a ház, megijeszti a szomszédokat, és mindig egy elégedett vigyor követi.",
-        "Legendary Candy Stash": "A Legendás Cukorka Készlet. Mindannyian tudjuk, hogy azt mondja semmi édesség, mégis valahogy varázsütésre megjelennek a csokipapírok. Ő a cukorkák elrejtésének nagymestere.",
-        "Master of the Grill": "A Grill Mestere. Mutass neki egy darab húst és egy grillt, és varázslóvá válik. A titkos összetevő? Egy kis konyak és rengeteg magyar szenvedély.",
-        "Driving Curb": "A Padkák Mestere. László nem csak vezet; ő érzésből navigál. Ha egy padkát nem csippentették meg a gumijai, az a kanyar meg sem történt.",
-        "Golfing Legend": "A Golf Legenda, legalábbis szerinte. Elüti a labdát... valahova. Általában egy fa felé, de mindezt egy profi összpontosításával és egy úriember stílusával teszi.",
-        "Building Connections": "Kapcsolatok Építése. Személyi titkárként dolgozik, mindig szervez és kapcsolatot teremt az emberekkel.",
-        "Bar Scene": "A Bár Élet. Népszerű bárok megnyitása, tereket teremtve az öröm, a bulizás és a közösség számára.",
-        "Business Brilliance": "Üzleti Zsenialitás. Sikeres üzletközvetítőként és fúziós szakemberként tevékenykedik.",
-        "A Life Well Lived": "Egy Jól Megélt Élet. Küzdősportoló vízilabdázó, a parkettet felszántó versenytáncos, és egy lelkes golfozó... az élet sosem unalmas!",
-        "(Terrible) Driver": "Egy Borzalmas Sofőr. Legyünk őszinték... ő egy borzalmas sofőr. Mindannyian titokban nagyon örülünk, hogy már nem vezet!",
-        "Sweet Tooth": "Édesszájú és Hóbortok. Komoly gyengéje a cukorka és a csokoládés ostya! De vigyázat, ha túl sokat eszik, kezdődnek a tüsszögő rohamok!",
-        "Hungarian Verdict": "A Magyar Ítélet. László végső tesztje bármire, hogy elég magyar-e. Ha hiányzik belőle a magyar szikra, megkapja a klasszikus László-félrearcot.",
-        "Water Polo": "A Hajnali Három Órás Vízilabda Meccs. Egyszer só és borsszórókkal magyarázta a vízilabdát egy étteremben. Nem tudjuk ki nyert, de az asztal nagyon fűszerezett lett.",
-        "A Good Laugh": "Egy Jó Nevetés. A legendás vígjátékok igazi rajongója. Semmi sem jobb egy jó nevetéshez, mint a Mr. Bean, vagy a Két pasi meg egy kicsi.",
-        "Mr. Bean": "Mr. Bean. Nincs szüksége szavakra ahhoz, hogy ő legyen a legviccesebb ember a világon, akárcsak Lászlónak, amikor egy villanykörtét próbál megjavítani!",
-        "Fools and Horses": "Suzi és a többiek. Bárkit meg tud győzni arról, hogy egy húsz éves autó olyan, mint az új.",
-        "Laszlo Wince": "A Klasszikus László Félrearc. Az az arc, amit akkor vág, amikor a bor nem elég magyar... a csalódás, a zavar és egy néma ima keveréke egy kis Tokajiért.",
-        "A note for Laszlo": "Üzenet Lászlónak. Oly sok szeretetet és erőt küldünk neked. Olyan sok életet érintettél meg, és ma és mindig ünnepelni akarunk téged!"
+        "Roots in Hungary": "Egyenesen Magyarországról jött, azzal a vastag, felejthetetlen akcentussal, amit mindannyian imádunk.",
+        "A Passion for Wine": "A bor és a konyak szerelmese. Igazi bormester elit diplomával, no meg a konyak... szigorúan három lime-mal!",
+        "The Infinite Sneeze": "A brutális tüsszentés. Lászlóé a világ legnagyobb tüsszentése. Beleremeg a ház, megijednek a szomszédok, utána meg jön a jól megszokott elégedett vigyor.",
+        "Legendary Candy Stash": "A legendás édességraktár. Állandóan azt mondja, hogy 'semmi édesség', aztán meg varázsütésre előkerülnek a csokipapírok. Ő a nassolás nagymestere.",
+        "Master of the Grill": "A grill királya. Adj neki egy darab húst meg egy grillt, és csodát tesz. A titkos recept? Egy kis konyak és rengeteg magyar virtus.",
+        "Driving Curb": "A padkák réme. László nem csak vezet, ő érzésből tájékozódik. Ha nem padkázza le a kereket, az a kanyar meg sem történt.",
+        "Golfing Legend": "A golflegenda, legalábbis ő ezt hiszi. Elüti a labdát... valahova. Leginkább egy fa vagy egy mókus felé, de mindezt profi arccal és úriember módjára.",
+        "Building Connections": "A kapcsolatépítő. Személyi titkárként mindig szervezkedik és imád az emberekkel foglalkozni.",
+        "Bar Scene": "A bárvilág. Imádott bárokat nyitott Long Beachen és Redondo Beachen, összehozva az embereket egy jó bulira.",
+        "Business Brilliance": "Üzleti zseni. Sikeres üzletkötőként és cégfelvásárlási szakértőként is bizonyított.",
+        "A Life Well Lived": "Egy igazán tartalmas élet. A House of Blues oszlopos tagja. Versenyszerű vizilabdázó, parkettördög táncos és lelkes golfozó... mellette sosem unalmas az élet!",
+        "(Terrible) Driver": "A kriminális sofőr. Valljuk be őszintén... borzalmasan vezet. Titokban mindannyian nagyon örülünk, hogy letette a jogsit!",
+        "Sweet Tooth": "Édesszájú. Hatalmas gyengéje a cukorka és a csokis nápolyi! De vigyázat, ha túleszi magát, jönnek a tüsszögőrohamok!",
+        "Hungarian Verdict": "A magyar mérce. László mindent aszerint ítél meg, hogy elég magyar-e. Ha hiányzik a magyaros szikra, jön a klasszikus fintor.",
+        "Water Polo": "A hajnali 3 órás vizilabda meccs. Egyszer egy étteremben a só és borsszórókkal magyarázta el a vizilabdát. Máig sem tudjuk ki nyert, de az asztal nagyon jól meg lett fűszerezve.",
+        "A Good Laugh": "Egy jóízű nevetés. Imádja a klasszikus vígjátékokat. Nincs is jobb, mint a Mr. Bean vagy a Két pasi meg egy kicsi.",
+        "Mr. Bean": "Mr. Bean. Neki sincs szüksége szavakra ahhoz, hogy ő legyen a legviccesebb, pont mint Lászlónak, amikor kicserél egy villanykörtét!",
+        "Fools and Horses": "Szeszélyes évszakok. Bárkit képes meggyőzni arról, hogy egy húszéves autó olyan, mintha most gurult volna ki a szalonból.",
+        "Laszlo Wince": "A tipikus László fintor. Az a bizonyos arc, amit akkor vág, amikor a bor nem elég magyar... a csalódás és az értetlenség tökéletes keveréke.",
+        "A note for Laszlo": "Üzenet Lászlónak. Rengeteg szeretetet és erőt küldünk neked. Olyan sok ember életét tetted szebbé, ma és mindig téged ünneplünk!"
     };
 
     interactiveBoxes.forEach(box => {
@@ -802,32 +802,61 @@ function initHungarianTranslator() {
     });
 }
 
-function speakLaszlo(customText = 'I am Laszlo', lang = 'en-US') {
-    const synth = window.speechSynthesis;
+// Global audio queue manager to play sequences of cloud TTS perfectly
+let currentAudioQueue = [];
+let isPlayingQueue = false;
+
+function playNextInQueue() {
+    if (currentAudioQueue.length === 0) {
+        isPlayingQueue = false;
+        return;
+    }
     
-    // Always stop current speech before starting new one
+    isPlayingQueue = true;
+    const audioUrl = currentAudioQueue.shift();
+    const audio = new Audio(audioUrl);
+    
+    audio.onended = playNextInQueue;
+    audio.onerror = playNextInQueue;
+    audio.play().catch(e => {
+        console.log("Audio play blocked", e);
+        playNextInQueue();
+    });
+}
+
+function speakLaszlo(customText = 'I am Laszlo', lang = 'en-US') {
+    // Stop any existing playback
+    currentAudioQueue = [];
+    const synth = window.speechSynthesis;
     if (synth.speaking) synth.cancel();
 
+    if (lang === 'hu-HU') {
+        // Break large text by sentence end characters for the API limit
+        const sentences = customText.match(/[^\.!\?]+[\.!\?]+/g) || [customText];
+        
+        sentences.forEach(sentence => {
+            let safeText = sentence.trim();
+            if (safeText.length > 0) {
+                // client=gtx is the ultra-robust Google cloud translation TTS endpoint (bypasses browser voice limitations)
+                const audioUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=hu&q=${encodeURIComponent(safeText)}`;
+                currentAudioQueue.push(audioUrl);
+            }
+        });
+        
+        if (!isPlayingQueue) playNextInQueue();
+        return;
+    }
+
+    // Fallback to Web Speech API for English
     const utterance = new SpeechSynthesisUtterance(customText);
-    utterance.lang = lang; // 'hu-HU' will automatically use Mac's native Hungarian voice (e.g. Mariska, Tunde)
+    utterance.lang = lang; 
     utterance.volume = 1;
 
     const voices = synth.getVoices();
-    let selectedVoice;
+    utterance.rate = 0.85;
+    utterance.pitch = 0.5;
+    const selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred'));
 
-    if (lang === 'hu-HU') {
-        utterance.rate = 0.85; // Natural speak speed
-        utterance.pitch = 0.5; // Deep voice
-        // Try to explicitly grab any hungarian voice just in case
-        selectedVoice = voices.find(v => v.lang.includes('hu'));
-    } else {
-        utterance.rate = 0.85;
-        utterance.pitch = 0.5;
-        // Deep English voices
-        selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred'));
-    }
-
-    // If we found a matching explicit voice, set it. Otherwise default OS routing takes over based on lang.
     if (selectedVoice) {
         utterance.voice = selectedVoice;
     }
