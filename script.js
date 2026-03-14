@@ -9,8 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load gallery images
     loadGalleryImages();
 
-    // Setup Music Audio
-    setupMusicPlayer();
+    // Setup Music Audio (autoplay)
+    setupMusicPlayer(true);
+
+    // Floating "I am Laszlo" text
+    createFloatingTexts();
 
     // Initialize custom glowing cursor
     initCustomCursor();
@@ -70,7 +73,56 @@ function initScrollAnimations() {
     sr.reveal('.message-card', { origin: 'top', distance: '40px', duration: 1200 });
 }
 
-function setupMusicPlayer() {
+function createFloatingTexts() {
+    const phrases = ['I am Laszlo', 'I am Laszlo! 🇭🇺', 'I AM LASZLO', 'I am Laszlo 🍷', 'I am Laszlo! 💃', 'I am Laszlo 🥂'];
+    const colors = ['#FF2E4C', '#1E8F43', '#ffa07a', '#ffffff', '#FFD700', '#FF69B4'];
+
+    phrases.forEach((text, i) => {
+        const el = document.createElement('div');
+        el.className = 'floating-laszlo';
+        el.textContent = text;
+        el.style.color = colors[i % colors.length];
+        el.style.fontSize = (Math.random() * 24 + 18) + 'px';
+        el.style.fontWeight = '700';
+        el.style.fontFamily = 'Outfit, sans-serif';
+        el.style.position = 'fixed';
+        el.style.zIndex = '50';
+        el.style.pointerEvents = 'none';
+        el.style.textShadow = '0 0 20px rgba(255,46,76,0.5)';
+        el.style.whiteSpace = 'nowrap';
+        el.style.opacity = '0.85';
+        document.body.appendChild(el);
+
+        // Random starting position
+        let x = Math.random() * (window.innerWidth - 200);
+        let y = Math.random() * (window.innerHeight - 50);
+        let dx = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+        let dy = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+
+        function animate() {
+            x += dx;
+            y += dy;
+
+            // Bounce off edges (DVD screensaver style!)
+            if (x <= 0 || x >= window.innerWidth - el.offsetWidth) {
+                dx = -dx;
+                // Change color on bounce for fun
+                el.style.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            if (y <= 0 || y >= window.innerHeight - el.offsetHeight) {
+                dy = -dy;
+                el.style.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            requestAnimationFrame(animate);
+        }
+        animate();
+    });
+}
+
+function setupMusicPlayer(autoplay) {
     const btn = document.getElementById('music-btn');
     let audioCtx = null;
     let isPlaying = false;
@@ -116,26 +168,41 @@ function setupMusicPlayer() {
         });
     }
 
+    function startPlaying() {
+        if (isPlaying) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        scheduleSequence();
+        const loopLength = melodyNotes.length * 0.25 * 1000;
+        schedulerInterval = setInterval(scheduleSequence, loopLength);
+        isPlaying = true;
+        if (btn) {
+            btn.classList.add('playing');
+            btn.innerHTML = '⏸ Pause Music';
+        }
+    }
+
+    function stopPlaying() {
+        if (schedulerInterval) clearInterval(schedulerInterval);
+        if (audioCtx) audioCtx.close();
+        audioCtx = null;
+        isPlaying = false;
+        if (btn) {
+            btn.classList.remove('playing');
+            btn.innerHTML = '🎵 Play Hungarian Music';
+        }
+    }
+
+    // Autoplay on load
+    if (autoplay) {
+        startPlaying();
+    }
+
     if (btn) {
         btn.addEventListener('click', () => {
             if (!isPlaying) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                scheduleSequence();
-                // Re-schedule the melody every loop
-                const loopLength = melodyNotes.length * 0.25 * 1000; // in ms
-                schedulerInterval = setInterval(scheduleSequence, loopLength);
-                
-                isPlaying = true;
-                btn.classList.add('playing');
-                btn.innerHTML = '⏸ Pause Music';
+                startPlaying();
             } else {
-                if (schedulerInterval) clearInterval(schedulerInterval);
-                if (audioCtx) audioCtx.close();
-                audioCtx = null;
-                
-                isPlaying = false;
-                btn.classList.remove('playing');
-                btn.innerHTML = '🎵 Play Hungarian Music';
+                stopPlaying();
             }
         });
     }
