@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.background-particles');
     
-    // Create floating particles
-    for (let i = 0; i < 20; i++) {
+    // Create more floating particles for a livelier background
+    for (let i = 0; i < 35; i++) {
         createParticle(container);
     }
 
@@ -284,6 +284,9 @@ function loadGalleryImages() {
         interval: 100,
         duration: 800
     });
+
+    // Create floating thumbnail images from a selection of gallery photos
+    createFloatingImages(images);
 }
 
 function createParticle(container) {
@@ -291,13 +294,13 @@ function createParticle(container) {
     particle.className = 'particle';
     
     // Randomize properties
-    const size = Math.random() * 15 + 5; // 5px to 20px
-    const posX = Math.random() * 100; // 0% to 100%
-    const delay = Math.random() * 10; // 0s to 10s
-    const duration = Math.random() * 10 + 10; // 10s to 20s
+    const size = Math.random() * 15 + 5;
+    const posX = Math.random() * 100;
+    const delay = Math.random() * 10;
+    const duration = Math.random() * 10 + 10;
     
-    // Red, green, or white dots
-    const colors = ['#CE2939', '#477050', '#FFFFFF'];
+    // Red, green, gold, and white dots
+    const colors = ['#FF2E4C', '#1E8F43', '#FFD700', '#FFFFFF'];
     const color = colors[Math.floor(Math.random() * colors.length)];
     
     particle.style.width = `${size}px`;
@@ -310,3 +313,126 @@ function createParticle(container) {
     
     container.appendChild(particle);
 }
+
+// Floating thumbnail images that drift around the screen
+function createFloatingImages(images) {
+    // Pick 5 random images to float
+    const shuffled = [...images].sort(() => Math.random() - 0.5);
+    const picks = shuffled.slice(0, 5);
+
+    picks.forEach((imgSrc, i) => {
+        const el = document.createElement('img');
+        el.src = `images/${imgSrc}`;
+        el.className = 'floating-photo';
+        el.style.position = 'fixed';
+        el.style.zIndex = '40';
+        el.style.pointerEvents = 'auto';
+        el.style.cursor = 'pointer';
+        const size = Math.random() * 40 + 60; // 60-100px
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.objectFit = 'cover';
+        el.style.borderRadius = '50%';
+        el.style.border = '2px solid rgba(255,46,76,0.5)';
+        el.style.boxShadow = '0 4px 20px rgba(255,46,76,0.3)';
+        el.style.opacity = '0.7';
+        el.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        document.body.appendChild(el);
+
+        // Click to enlarge in lightbox
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            if (lightbox && lightboxImg) {
+                lightboxImg.src = el.src;
+                lightbox.classList.add('active');
+            }
+        });
+
+        // Hover effect
+        el.addEventListener('mouseenter', () => {
+            el.style.opacity = '1';
+            el.style.transform = 'scale(1.3)';
+        });
+        el.addEventListener('mouseleave', () => {
+            el.style.opacity = '0.7';
+            el.style.transform = 'scale(1)';
+        });
+
+        let x = Math.random() * (window.innerWidth - 120);
+        let y = Math.random() * (window.innerHeight - 120);
+        let dx = (Math.random() * 0.4 + 0.2) * (Math.random() > 0.5 ? 1 : -1);
+        let dy = (Math.random() * 0.4 + 0.2) * (Math.random() > 0.5 ? 1 : -1);
+
+        function animate() {
+            x += dx;
+            y += dy;
+            if (x <= 0 || x >= window.innerWidth - el.offsetWidth) {
+                dx = -dx;
+            }
+            if (y <= 0 || y >= window.innerHeight - el.offsetHeight) {
+                dy = -dy;
+            }
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            requestAnimationFrame(animate);
+        }
+        animate();
+    });
+}
+
+// Confetti burst effect
+function launchConfetti() {
+    const colors = ['#FF2E4C', '#1E8F43', '#FFD700', '#FF69B4', '#00BFFF', '#FFA07A'];
+    for (let i = 0; i < 80; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.left = '50%';
+        confetti.style.top = '50%';
+        confetti.style.width = (Math.random() * 8 + 4) + 'px';
+        confetti.style.height = (Math.random() * 8 + 4) + 'px';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '9999';
+        document.body.appendChild(confetti);
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 400 + 200;
+        const vx = Math.cos(angle) * velocity;
+        const vy = Math.sin(angle) * velocity;
+        const rotation = Math.random() * 720;
+
+        confetti.animate([
+            { transform: 'translate(-50%, -50%) rotate(0deg)', opacity: 1 },
+            { transform: `translate(calc(-50% + ${vx}px), calc(-50% + ${vy}px)) rotate(${rotation}deg)`, opacity: 0 }
+        ], {
+            duration: 1500 + Math.random() * 1000,
+            easing: 'cubic-bezier(0, .9, .57, 1)'
+        }).onfinish = () => confetti.remove();
+    }
+}
+
+// Attach confetti to the hero button
+document.addEventListener('DOMContentLoaded', () => {
+    const heroBtn = document.querySelector('.btn');
+    if (heroBtn) {
+        heroBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            launchConfetti();
+            speakLaszlo();
+        });
+    }
+
+    // Pulsing glow on the title
+    const title = document.querySelector('.title');
+    if (title) {
+        setInterval(() => {
+            title.style.textShadow = '0 0 40px rgba(255,46,76,0.6), 0 10px 30px rgba(0,0,0,0.5)';
+            setTimeout(() => {
+                title.style.textShadow = '0 10px 30px rgba(0,0,0,0.5)';
+            }, 1500);
+        }, 3000);
+    }
+});
