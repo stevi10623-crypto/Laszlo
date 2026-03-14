@@ -802,26 +802,29 @@ function initHungarianTranslator() {
     });
 }
 
-// Updated speakLaszlo to clearly define pronunciation language
+// Updated speakLaszlo to use high-quality TTS for Hungarian
 function speakLaszlo(customText = 'I am Laszlo', lang = 'en-US') {
+    // For guaranteed proper Hungarian, use external API
+    if (lang === 'hu-HU') {
+        // Ensure text is under ~200 chars (it should be based on our dictionary)
+        const safeText = customText.substring(0, 199); 
+        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(safeText)}&tl=hu&client=tw-ob`;
+        const audio = new Audio(audioUrl);
+        audio.play().catch(e => console.log("Hungarian TTS blocked until interaction", e));
+        return;
+    }
+
+    // Fallback to Web Speech API for English
     const synth = window.speechSynthesis;
     if (synth.speaking) synth.cancel();
     
     const utterance = new SpeechSynthesisUtterance(customText);
     utterance.lang = lang;
-    utterance.rate = 0.85; // slightly faster for Hungarian to sound natural
+    utterance.rate = 0.85; 
     utterance.pitch = 0.5;
     
     const voices = synth.getVoices();
-    let selectedVoice;
-    
-    if (lang === 'hu-HU') {
-        // Explicitly look for a Hungarian voice, like 'Mariska' or 'Tamas'
-        selectedVoice = voices.find(v => v.lang.startsWith('hu'));
-    } else {
-        selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred'));
-    }
-    
+    let selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred'));
     if (selectedVoice) utterance.voice = selectedVoice;
     synth.speak(utterance);
 }
