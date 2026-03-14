@@ -123,89 +123,37 @@ function createFloatingTexts() {
 }
 
 function setupMusicPlayer(autoplay) {
+    const audio = document.getElementById('bg-music');
     const btn = document.getElementById('music-btn');
-    let audioCtx = null;
-    let isPlaying = false;
-    let schedulerInterval = null;
 
-    // Hungarian minor scale melody (csárdás-style) — frequencies in Hz
-    // A Hungarian minor: A B C D# E F G# A
-    const melodyNotes = [
-        440, 494, 523, 622, 659, 698, 831, 880,   // ascending
-        880, 831, 698, 659, 622, 523, 494, 440,   // descending
-        523, 622, 659, 523, 494, 440, 494, 523,   // playful phrase 1
-        659, 622, 523, 440, 494, 622, 659, 880,   // playful phrase 2
-        440, 523, 659, 880, 659, 523, 440, 494,   // phrase 3
-    ];
+    if (!btn || !audio) return;
 
-    function playNote(ctx, freq, startTime, duration) {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        
-        osc.type = 'triangle'; // warm, folk-like tone
-        osc.frequency.setValueAtTime(freq, startTime);
-        
-        gain.gain.setValueAtTime(0.0, startTime);
-        gain.gain.linearRampToValueAtTime(0.3, startTime + 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration - 0.02);
-        
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.start(startTime);
-        osc.stop(startTime + duration);
-    }
+    // Start playing state since autoplay is on
+    let isPlaying = true;
+    btn.classList.add('playing');
 
-    function scheduleSequence() {
-        if (!audioCtx) return;
-        const now = audioCtx.currentTime;
-        const noteDuration = 0.25; // fast tempo
-        
-        melodyNotes.forEach((freq, i) => {
-            playNote(audioCtx, freq, now + i * noteDuration, noteDuration);
-            // Add a harmonic third below for richer sound
-            playNote(audioCtx, freq * 0.8, now + i * noteDuration, noteDuration);
-        });
-    }
-
-    function startPlaying() {
-        if (isPlaying) return;
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        scheduleSequence();
-        const loopLength = melodyNotes.length * 0.25 * 1000;
-        schedulerInterval = setInterval(scheduleSequence, loopLength);
-        isPlaying = true;
-        if (btn) {
-            btn.classList.add('playing');
-            btn.innerHTML = '⏸ Pause Music';
-        }
-    }
-
-    function stopPlaying() {
-        if (schedulerInterval) clearInterval(schedulerInterval);
-        if (audioCtx) audioCtx.close();
-        audioCtx = null;
-        isPlaying = false;
-        if (btn) {
+    // If autoplay was blocked by browser, update the button
+    audio.addEventListener('pause', () => {
+        if (!audio.ended) {
+            isPlaying = false;
             btn.classList.remove('playing');
             btn.innerHTML = '🎵 Play Hungarian Music';
         }
-    }
+    });
 
-    // Autoplay on load
-    if (autoplay) {
-        startPlaying();
-    }
+    audio.addEventListener('play', () => {
+        isPlaying = true;
+        btn.classList.add('playing');
+        btn.innerHTML = '⏸ Pause Music';
+    });
 
-    if (btn) {
-        btn.addEventListener('click', () => {
-            if (!isPlaying) {
-                startPlaying();
-            } else {
-                stopPlaying();
-            }
-        });
-    }
+    btn.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    });
 }
 
 function loadGalleryImages() {
