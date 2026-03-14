@@ -770,23 +770,29 @@ function initHungarianTranslator() {
         "A note for Laszlo": "Üzenet Lászlónak. Rengeteg szeretetet és erőt küldünk neked. Olyan sok ember életét tetted szebbé, ma és mindig téged ünneplünk!"
     };
 
+    let currentHungarianAudio = null;
+
     interactiveBoxes.forEach(box => {
         box.style.cursor = 'help';
         box.setAttribute('title', 'Kattints ide a magyar fordításért! (Click for Hungarian translation)');
         
         box.addEventListener('click', (e) => {
             const innerText = box.innerText;
-            let spokenText = "Isten hozta Magyarországon!"; // Default fallback
+            let audioPath = "audio/fallback.mp3"; // Default fallback
             
             // Find the matching translation based on English keywords
-            for (const [key, translatedParagraph] of Object.entries(translations)) {
+            for (const key of Object.keys(translations)) {
                 if (innerText.includes(key)) {
-                    spokenText = translatedParagraph;
+                    audioPath = "audio/" + key.replace(/[^a-zA-Z0-9]/g, '_') + ".mp3";
                     break;
                 }
             }
             
-            speakLaszlo(spokenText, 'hu-HU');
+            if (currentHungarianAudio) {
+                currentHungarianAudio.pause();
+            }
+            currentHungarianAudio = new Audio(audioPath);
+            currentHungarianAudio.play().catch(e => console.log("Hungarian audio blocked until interaction", e));
             
             // Visual feedback
             const originalColor = box.style.borderColor;
@@ -802,54 +808,13 @@ function initHungarianTranslator() {
     });
 }
 
-// Global audio queue manager to play sequences of cloud TTS perfectly
-let currentAudioQueue = [];
-let isPlayingQueue = false;
-
-function playNextInQueue() {
-    if (currentAudioQueue.length === 0) {
-        isPlayingQueue = false;
-        return;
-    }
-    
-    isPlayingQueue = true;
-    const audioUrl = currentAudioQueue.shift();
-    const audio = new Audio(audioUrl);
-    
-    audio.onended = playNextInQueue;
-    audio.onerror = playNextInQueue;
-    audio.play().catch(e => {
-        console.log("Audio play blocked", e);
-        playNextInQueue();
-    });
-}
-
-function speakLaszlo(customText = 'I am Laszlo', lang = 'en-US') {
-    // Stop any existing playback
-    currentAudioQueue = [];
+function speakLaszlo(customText = 'I am Laszlo') {
     const synth = window.speechSynthesis;
     if (synth.speaking) synth.cancel();
 
-    if (lang === 'hu-HU') {
-        // Break large text by sentence end characters for the API limit
-        const sentences = customText.match(/[^\.!\?]+[\.!\?]+/g) || [customText];
-        
-        sentences.forEach(sentence => {
-            let safeText = sentence.trim();
-            if (safeText.length > 0) {
-                // client=gtx is the ultra-robust Google cloud translation TTS endpoint (bypasses browser voice limitations)
-                const audioUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=hu&q=${encodeURIComponent(safeText)}`;
-                currentAudioQueue.push(audioUrl);
-            }
-        });
-        
-        if (!isPlayingQueue) playNextInQueue();
-        return;
-    }
-
-    // Fallback to Web Speech API for English
+    // English Web Speech API
     const utterance = new SpeechSynthesisUtterance(customText);
-    utterance.lang = lang; 
+    utterance.lang = 'en-US'; 
     utterance.volume = 1;
 
     const voices = synth.getVoices();
@@ -872,7 +837,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const honk = new Audio('https://www.soundjay.com/transportation/sounds/ship-horn-1.mp3');
             honk.volume = 0.4;
             honk.play().catch(() => {});
-            speakLaszlo('Mindenki a fedélzetre!', 'hu-HU');
+            
+            // Play native generated Hungarian audio
+            new Audio('audio/boat.mp3').play().catch(() => {});
         });
     }
     
