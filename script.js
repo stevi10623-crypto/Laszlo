@@ -317,13 +317,20 @@ function initNeuralLaszlo() {
 }
 
 function createFloatingTexts() {
-    const phrases = ['I am Laszlo 🍷', 'I am Laszlo 🕺', 'I am Laszlo! 🇭🇺', 'I AM LASZLO 🥂'];
+    // Adding the two requested specific Hungarian phrases with matching audio files
+    const floatingData = [
+        { text: 'Tűnés a helyemről, vagy véged! 🪑', audio: 'audio/floating_seat.mp3' },
+        { text: 'Így jártál... túl szomorú. 🤷', audio: 'audio/floating_toobad.mp3' },
+        { text: 'I am Laszlo! 🍷', audio: 'audio/boat.mp3' }, // fallback classic
+        { text: 'I am Laszlo! 🇭🇺', audio: 'audio/neural_1.mp3'} // Hungarian wine is the best
+    ];
+    
     const colors = ['#FF2E4C', '#1E8F43', '#ffa07a', '#ffffff'];
 
-    phrases.forEach((text, i) => {
+    floatingData.forEach((item, i) => {
         const el = document.createElement('div');
         el.className = 'floating-laszlo';
-        el.textContent = text;
+        el.textContent = item.text;
         el.style.color = colors[i % colors.length];
         el.style.fontSize = (Math.random() * 20 + 20) + 'px';
         el.style.fontWeight = '700';
@@ -334,9 +341,14 @@ function createFloatingTexts() {
         el.style.textShadow = '0 0 15px rgba(255,46,76,0.5)';
         document.body.appendChild(el);
 
-        // Click to hear Laszlo speak!
+        let floatAudio = null;
+
+        // Click to hear the specific phrase!
         el.addEventListener('click', () => {
-            speakLaszlo();
+            if (floatAudio) floatAudio.pause();
+            floatAudio = new Audio(item.audio);
+            floatAudio.play().catch(() => {});
+            
             el.style.transform = 'scale(1.5)';
             setTimeout(() => el.style.transform = 'scale(1)', 300);
         });
