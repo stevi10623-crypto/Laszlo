@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thinking of You, Laszlo! ❤️</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Animation Libraries -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Custom Interactive Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-follower"></div>
+
+    <!-- Floating background elements -->
+    <div class="background-particles"></div>
+
+    <!-- Interactive Music Button -->
+    <button id="music-btn" class="music-btn pulse-animation">🎵 Play Hungarian Music</button>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="badge bounce-in">Thinking of You</div>
+            <h1 class="title swing-in">We Love You, <span class="highlight">Laszlo!</span></h1>
+            <p class="subtitle fade-in-up">To the man from Hungary with a heart of gold, who loves to party and always has a good time! 🎉</p>
+            <a href="#story" class="btn slide-in-bottom">Read Your Story ↓</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="story" class="story-section">
+            <div class="container">
+                <div class="story-container">
+                    <div class="story-content">
+                        <h2 class="section-title">An Incredible Journey</h2>
+                        <ul class="timeline">
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>Roots in Hungary 🇭🇺</h3>
+                                    <p>Coming to us all the way from Hungary with that unforgettable heavy accent we love so much.</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>A Passion for Wine & Cognac 🍷🥂</h3>
+                                    <p>Mastering the art of the vine with a prestigious wine degree. And we can't forget the love for Cognac... usually accompanied by exactly 3 limes!</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>Building Connections 🤝</h3>
+                                    <p>Working as a personal secretary, always organizing and connecting with people.</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>The Bar Scene 🍻</h3>
+                                    <p>Opening beloved bars in Long Beach and Redondo Beach, creating spaces for joy, partying, and community.</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>Business Brilliance 💼</h3>
+                                    <p>Thriving as a business broker and Mergers & Acquisitions specialist.</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>A Life Well Lived 🏌️‍♂️💃🤽‍♂️</h3>
+                                    <p>A proud member of the House of Blues on Sunset and the Braemar Country Club. 
+                                    Between being a competitive water polo player, tearing up the dance floor as a ballroom dancer, and enthusiastically trying (but maybe not succeeding) at golf... life is never boring!</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>A (Terrible) Driver 🚗💥</h3>
+                                    <p>Let's be honest... he is a terrible driver. We are all secretly very glad he doesn't drive anymore!</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>Sweet Tooth & Quirks 🍫🤧</h3>
+                                    <p>He has a serious weakness for candy and chocolate wafers! But watch out—if he eats too much food, the sneezing fits begin!</p>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h3>A Good Laugh 📺😂</h3>
+                                    <p>A true fan of legendary comedy. Nothing beats watching Mr. Bean, Keeping Up Appearances, or Two and a Half Men for a good laugh.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="gallery-section">
+            <div class="container">
+                <h2 class="section-title">Special Moments</h2>
+                <p class="section-desc">Here is where we will put the beautiful pictures you share. I have left some placeholders for now!</p>
+                
+                <div class="gallery-grid" id="photo-gallery">
+                    <!-- Images will be dynamically loaded here, starting with the wine placeholder -->
+                    <div class="gallery-item">
+                        <img src="images/hungarian_wine.png" alt="A toast to Laszlo" class="gallery-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="messages-section">
+            <div class="container">
+                <div class="message-card">
+                    <h3>A note for Laszlo...</h3>
+                    <p>"We are sending you so much love and strength. You have touched so many lives and we want to celebrate you today and always!"</p>
+                    <div class="author">— Your dear friend</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Made with ❤️ to bring a smile to Laszlo.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
