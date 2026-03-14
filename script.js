@@ -236,7 +236,39 @@ function createFloatingTexts() {
 function startParty() {
     launchConfetti();
     createEmojiRain();
+    
+    // Wild Party Effects
+    document.body.style.animation = 'partyColors 0.5s infinite';
+    document.body.classList.add('party-shake');
+    
+    setTimeout(() => {
+        document.body.style.animation = '';
+        document.body.classList.remove('party-shake');
+    }, 5000);
 }
+
+// Add these to CSS dynamically if needed, but let's assume they're in styles.css or add them here
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes partyColors {
+        0% { background-color: rgba(255, 46, 76, 0.2); }
+        33% { background-color: rgba(30, 143, 67, 0.2); }
+        66% { background-color: rgba(255, 215, 0, 0.2); }
+        100% { background-color: rgba(15, 15, 17, 1); }
+    }
+    .party-shake {
+        animation: shake 0.1s infinite;
+    }
+    @keyframes shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        40% { transform: translate(1px, -1px) rotate(-1deg); }
+        60% { transform: translate(-1px, 1px) rotate(0deg); }
+        80% { transform: translate(3px, 1px) rotate(1deg); }
+        100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+`;
+document.head.appendChild(style);
 
 function createEmojiRain() {
     const emojis = ['🍷', '🕺', '🍰', '🇭🇺', '🍖', '⛳️', '🏎️', '🍭'];
