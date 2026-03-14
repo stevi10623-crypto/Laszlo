@@ -94,8 +94,8 @@ function speakLaszlo() {
 }
 
 function createFloatingTexts() {
-    const phrases = ['I am Laszlo', 'I am Laszlo! 🇭🇺', 'I AM LASZLO', 'I am Laszlo 🍷', 'I am Laszlo! 💃', 'I am Laszlo 🥂'];
-    const colors = ['#FF2E4C', '#1E8F43', '#ffa07a', '#ffffff', '#FFD700', '#FF69B4'];
+    const phrases = ['I am Laszlo 🇭🇺', 'I am Laszlo 🍷', 'I am Laszlo! 💃'];
+    const colors = ['#FF2E4C', '#1E8F43', '#FFD700'];
 
     // Pre-load voices
     window.speechSynthesis.getVoices();
@@ -105,16 +105,16 @@ function createFloatingTexts() {
         el.className = 'floating-laszlo';
         el.textContent = text;
         el.style.color = colors[i % colors.length];
-        el.style.fontSize = (Math.random() * 24 + 18) + 'px';
+        el.style.fontSize = (Math.random() * 14 + 20) + 'px';
         el.style.fontWeight = '700';
         el.style.fontFamily = 'Outfit, sans-serif';
         el.style.position = 'fixed';
         el.style.zIndex = '50';
-        el.style.pointerEvents = 'auto'; // Make clickable!
+        el.style.pointerEvents = 'auto';
         el.style.cursor = 'pointer';
         el.style.textShadow = '0 0 20px rgba(255,46,76,0.5)';
         el.style.whiteSpace = 'nowrap';
-        el.style.opacity = '0.85';
+        el.style.opacity = '0.75';
         el.style.userSelect = 'none';
         el.style.transition = 'transform 0.2s ease';
         document.body.appendChild(el);
@@ -123,7 +123,6 @@ function createFloatingTexts() {
         el.addEventListener('click', (e) => {
             e.stopPropagation();
             speakLaszlo();
-            // Visual feedback
             el.style.transform = 'scale(1.8)';
             el.style.color = '#FFD700';
             setTimeout(() => { el.style.transform = 'scale(1)'; }, 400);
@@ -132,8 +131,9 @@ function createFloatingTexts() {
         // Random starting position
         let x = Math.random() * (window.innerWidth - 200);
         let y = Math.random() * (window.innerHeight - 50);
-        let dx = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
-        let dy = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+        // Much slower speed: 0.3 to 0.8 pixels per frame
+        let dx = (Math.random() * 0.5 + 0.3) * (Math.random() > 0.5 ? 1 : -1);
+        let dy = (Math.random() * 0.5 + 0.3) * (Math.random() > 0.5 ? 1 : -1);
 
         function animate() {
             x += dx;
