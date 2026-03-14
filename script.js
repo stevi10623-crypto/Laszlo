@@ -802,60 +802,36 @@ function initHungarianTranslator() {
     });
 }
 
-// Updated speakLaszlo to use high-quality TTS for Hungarian and play everything sequentially
-let currentAudioQueue = [];
-let isPlayingQueue = false;
-
-function playNextInQueue() {
-    if (currentAudioQueue.length === 0) {
-        isPlayingQueue = false;
-        return;
-    }
-    
-    isPlayingQueue = true;
-    const audioUrl = currentAudioQueue.shift();
-    const audio = new Audio(audioUrl);
-    
-    audio.onended = playNextInQueue;
-    audio.onerror = playNextInQueue;
-    audio.play().catch(e => {
-        console.log("Audio play blocked", e);
-        playNextInQueue();
-    });
-}
-
 function speakLaszlo(customText = 'I am Laszlo', lang = 'en-US') {
-    // Clear any existing playback
-    currentAudioQueue = [];
     const synth = window.speechSynthesis;
+    
+    // Always stop current speech before starting new one
     if (synth.speaking) synth.cancel();
 
-    // For guaranteed proper Hungarian, use external API
+    const utterance = new SpeechSynthesisUtterance(customText);
+    utterance.lang = lang; // 'hu-HU' will automatically use Mac's native Hungarian voice (e.g. Mariska, Tunde)
+    utterance.volume = 1;
+
+    const voices = synth.getVoices();
+    let selectedVoice;
+
     if (lang === 'hu-HU') {
-        // Break large text into sentences to bypass the 200 char limit on Google's free TTS endpoint
-        const sentences = customText.match(/[^\.!\?]+[\.!\?]+/g) || [customText];
-        
-        sentences.forEach(sentence => {
-            const safeText = sentence.trim();
-            if (safeText.length > 0) {
-                const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(safeText)}&tl=hu&client=tw-ob`;
-                currentAudioQueue.push(audioUrl);
-            }
-        });
-        
-        if (!isPlayingQueue) playNextInQueue();
-        return;
+        utterance.rate = 0.85; // Natural speak speed
+        utterance.pitch = 0.5; // Deep voice
+        // Try to explicitly grab any hungarian voice just in case
+        selectedVoice = voices.find(v => v.lang.includes('hu'));
+    } else {
+        utterance.rate = 0.85;
+        utterance.pitch = 0.5;
+        // Deep English voices
+        selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred'));
     }
 
-    // Fallback to Web Speech API for English
-    const utterance = new SpeechSynthesisUtterance(customText);
-    utterance.lang = lang;
-    utterance.rate = 0.85; 
-    utterance.pitch = 0.5;
-    
-    const voices = synth.getVoices();
-    let selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred'));
-    if (selectedVoice) utterance.voice = selectedVoice;
+    // If we found a matching explicit voice, set it. Otherwise default OS routing takes over based on lang.
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+    }
+
     synth.speak(utterance);
 }
 
