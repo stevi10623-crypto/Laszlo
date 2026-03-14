@@ -24,6 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Typewriter effect for hero subtitle
     initTypewriter();
 
+    // Initialize Whack-a-Laszlo Game
+    initGame();
+
+    // Initialize high-end "Neural Laszlo" interaction
+    initNeuralLaszlo();
+
     // Initialize ScrollReveal animations with premium distances
     initScrollAnimations();
 
@@ -171,21 +177,141 @@ function initScrollAnimations() {
     sr.reveal('.message-card', { origin: 'top', distance: '40px', duration: 1200 });
 }
 
-function speakLaszlo() {
+function speakLaszlo(customText = 'I am Laszlo') {
     const synth = window.speechSynthesis;
-    const utterance = new SpeechSynthesisUtterance('I am Laszlo');
-    utterance.rate = 0.7; // Slow and deep
-    utterance.pitch = 0.4; // Very deep voice
+    if (synth.speaking) synth.cancel(); // Stop current speech
+    
+    const utterance = new SpeechSynthesisUtterance(customText);
+    utterance.rate = 0.75;
+    utterance.pitch = 0.5;
     utterance.volume = 1;
     
-    // Try to find a deep male voice
     const voices = synth.getVoices();
-    const deepVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred')) 
-                   || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('male'))
+    // Prefer "Daniel" for a deep, clear quality if available
     const laszloVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Fred')) || voices[0];
     if (laszloVoice) utterance.voice = laszloVoice;
     
     synth.speak(utterance);
+}
+
+function initGame() {
+    const holes = document.querySelectorAll('.hole');
+    const scoreBoard = document.querySelector('#score');
+    const startBtn = document.querySelector('#start-game');
+    let lastHole;
+    let timeUp = false;
+    let score = 0;
+
+    // Create moles (round Laszlo heads)
+    holes.forEach(hole => {
+        const mole = document.createElement('div');
+        mole.className = 'mole';
+        mole.style.backgroundImage = 'url("images/hungarian_wine.png")'; // Default head
+        hole.appendChild(mole);
+        mole.addEventListener('click', whack);
+    });
+
+    const moles = document.querySelectorAll('.mole');
+
+    function randomTime(min, max) {
+        return Math.round(Math.random() * (max - min) + min);
+    }
+
+    function randomHole(holes) {
+        const idx = Math.floor(Math.random() * holes.length);
+        const hole = holes[idx];
+        if (hole === lastHole) return randomHole(holes);
+        lastHole = hole;
+        return hole;
+    }
+
+    function peep() {
+        const time = randomTime(400, 1000);
+        const hole = randomHole(holes);
+        const mole = hole.querySelector('.mole');
+        
+        // Use ALL 67 images for the moles!
+        const allImages = [
+            "20141122_215239.jpg", "20141213_120748_002.jpg", "20160206_185304.jpg", "20180223_172306.jpg",
+            "20180404_133810.jpg", "20180404_133812.jpg", "20180409_193626.jpg", "20180714_153823.jpg",
+            "20181113_234911.jpg", "20190619_084355.jpg", "20190727_144635.jpg", "20190802_130027.jpg",
+            "20190802_130158.jpg", "20191204_080426.jpg", "20191204_080456.jpg", "20191204_080511.jpg",
+            "20201120_184210.jpg", "20201120_184213~2.jpg", "20201120_184214.jpg", "20210716_152122.jpg",
+            "20220811_194007.jpg", "20220812_170538.jpg", "DSC00004.JPG", "DSC00007.jpg",
+            "DSC00065.JPG", "DSC00067.jpg", "DSC00072.JPG", "DSC00075.JPG",
+            "DSC00076(1).JPG", "DSC00076.JPG", "DSC00078.JPG", "DSC00079.JPG",
+            "DSC00080.JPG", "DSC00082.JPG", "DSC00100.JPG", "DSC00142.JPG",
+            "DSC00149-COLLAGE.jpg", "FB_IMG_1503810866712.jpg", "FIL10047.JPG", "FIL10168.JPG",
+            "FIL10203.JPG", "FIL10494.JPG", "IMG_20170812_183633.jpg", "IMG_20170812_183646-COLLAGE.jpg",
+            "IMG_20200321_104548_975.jpg", "IMG_2948.jpg", "IMG_2953.jpg", "Picture 072.jpg",
+            "Screenshot_20201210-075743_OneDrive.jpg", "Screenshot_20210620-000353_Photos.jpg",
+            "Screenshot_20221129-164515_Photos.jpg", "Screenshot_20221129-164945_Photos.jpg",
+            "Screenshot_20240124_131301_Photos.jpg", "Screenshot_20240203_151110_Photos.jpg",
+            "Screenshot_20240203_151355_Photos.jpg", "Screenshot_20240203_151405_Photos.jpg",
+            "Screenshot_20240203_151420_Photos.jpg", "Screenshot_20240827_090658_OneDrive.jpg",
+            "Screenshot_20240827_122235_Facebook.jpg", "Screenshot_20240926_122633_Photos.jpg",
+            "Screenshot_20241119_072537_OneDrive.jpg", "Screenshot_20251014_113536_Photos.jpg",
+            "Screenshot_20251115_115322_Facebook.jpg", "client_PART_1504042892051_IMG_0901.jpg",
+            "client_PART_1505613262587_IMG_20170916_185220.jpg", "hungarian_wine.png", "nanao_banana_pro.png"
+        ];
+        
+        mole.style.backgroundImage = `url("images/${allImages[Math.floor(Math.random()*allImages.length)]}")`;
+        
+        mole.classList.add('up');
+        setTimeout(() => {
+            mole.classList.remove('up');
+            if (!timeUp) peep();
+        }, time);
+    }
+
+    function whack(e) {
+        if (!e.isTrusted) return; 
+        score++;
+        this.classList.remove('up');
+        scoreBoard.textContent = score;
+        speakLaszlo('Ouch!');
+        launchConfetti();
+        
+        if (score === 10) speakLaszlo('Achievement Unlocked: Master Whacker!');
+    }
+
+    startBtn.addEventListener('click', () => {
+        score = 0;
+        scoreBoard.textContent = score;
+        timeUp = false;
+        peep();
+        setTimeout(() => timeUp = true, 15000); // 15 second round
+        startBtn.textContent = 'Keep Whacking!';
+    });
+}
+
+function initNeuralLaszlo() {
+    // Add a high-tech "Neural Interface" button
+    const zone = document.querySelector('#story');
+    const btn = document.createElement('button');
+    btn.className = 'btn neural-btn';
+    btn.innerHTML = '🧠 Initialize Neural Laszlo AI';
+    btn.style.marginTop = '2rem';
+    btn.style.display = 'block';
+    btn.style.marginLeft = 'auto';
+    btn.style.marginRight = 'auto';
+    zone.appendChild(btn);
+
+    const responses = [
+        "Hungarian wine is the best, obviously.",
+        "Del Boy says: Lovely Jubbly!",
+        "Watch out, I am about to sneeze.",
+        "Where did I hide that candy?",
+        "Don't worry about my driving, I'm okay... I think."
+    ];
+
+    btn.addEventListener('click', () => {
+        const msg = responses[Math.floor(Math.random() * responses.length)];
+        speakLaszlo(msg);
+        launchConfetti();
+        btn.classList.add('pulse-glow');
+        setTimeout(() => btn.classList.remove('pulse-glow'), 1000);
+    });
 }
 
 function createFloatingTexts() {
@@ -372,32 +498,27 @@ function setupMusicPlayer(autoplay) {
 
     if (!btn || !audio) return;
 
-    // Start playing state since autoplay is on
-    let isPlaying = true;
-    btn.classList.add('playing');
-
-    // If autoplay was blocked by browser, update the button
-    audio.addEventListener('pause', () => {
-        if (!audio.ended) {
-            isPlaying = false;
+    btn.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play().then(() => {
+                btn.classList.add('playing');
+                btn.innerHTML = '⏸ Stop the Party';
+                startParty();
+            }).catch(e => {
+                console.error("Audio playback blocked", e);
+                btn.innerHTML = '⚠️ Click again to start';
+            });
+        } else {
+            audio.pause();
             btn.classList.remove('playing');
             btn.innerHTML = '🎵 Play Hungarian Music';
         }
     });
 
-    audio.addEventListener('play', () => {
-        isPlaying = true;
-        btn.classList.add('playing');
-        btn.innerHTML = '⏸ Pause Music';
-    });
-
-    btn.addEventListener('click', () => {
-        if (audio.paused) {
-            audio.play();
-            startParty(); // Trigger party effects on play!
-        } else {
-            audio.pause();
-        }
+    // Handle unexpected pauses (browser blocking)
+    audio.addEventListener('pause', () => {
+        btn.classList.remove('playing');
+        btn.innerHTML = '🎵 Play & Start Party';
     });
 }
 
@@ -407,23 +528,27 @@ function loadGalleryImages() {
 
     // Hardcoded array of image names found in the directory
     const images = [
-        "hungarian_wine.png", "nanao_banana_pro.png",
-        "DSC00076.JPG", "Screenshot_20221129-164945_Photos.jpg", "DSC00100.JPG", "Picture 072.jpg", 
-        "IMG_2953.jpg", "20191204_080456.jpg", "DSC00075.JPG", "20180409_193626.jpg", 
-        "20201120_184213~2.jpg", "DSC00065.JPG", "20220811_194007.jpg", "Screenshot_20240926_122633_Photos.jpg", 
-        "20180223_172306.jpg", "Screenshot_20201210-075743_OneDrive.jpg", "DSC00072.JPG", "Screenshot_20251115_115322_Facebook.jpg", 
-        "DSC00067.jpg", "IMG_20170812_183646-COLLAGE.jpg", "Screenshot_20240203_151420_Photos.jpg", "20180714_153823.jpg", 
-        "20220812_170538.jpg", "Screenshot_20240827_090658_OneDrive.jpg", "Screenshot_20210620-000353_Photos.jpg", "20141122_215239.jpg", 
-        "20180404_133812.jpg", "FIL10203.JPG", "DSC00007.jpg", "Screenshot_20221129-164515_Photos.jpg", 
-        "20191204_080426.jpg", "20180404_133810.jpg", "DSC00004.JPG", "20190802_130027.jpg", 
-        "FB_IMG_1503810866712.jpg", "IMG_20170812_183633.jpg", "DSC00142.JPG", "Screenshot_20241119_072537_OneDrive.jpg", 
-        "20210716_152122.jpg", "20190619_084355.jpg", "20160206_185304.jpg", "Screenshot_20251014_113536_Photos.jpg", 
-        "IMG_20200321_104548_975.jpg", "20181113_234911.jpg", "FIL10168.JPG", "20190802_130158.jpg", 
-        "Screenshot_20240203_151110_Photos.jpg", "Screenshot_20240827_122235_Facebook.jpg", "DSC00149-COLLAGE.jpg", "DSC00080.JPG", 
-        "Screenshot_20240203_151405_Photos.jpg", "20141213_120748_002.jpg", "20201120_184214.jpg", "client_PART_1504042892051_IMG_0901.jpg", 
-        "DSC00082.JPG", "FIL10047.JPG", "FIL10494.JPG", "client_PART_1505613262587_IMG_20170916_185220.jpg", 
-        "DSC00078.JPG", "20190727_144635.jpg", "Screenshot_20240124_131301_Photos.jpg", "DSC00079.JPG", 
-        "20201120_184210.jpg", "DSC00076(1).JPG", "IMG_2948.jpg", "Screenshot_20240203_151355_Photos.jpg", "20191204_080511.jpg"
+        "20141122_215239.jpg", "20141213_120748_002.jpg", "20160206_185304.jpg", "20180223_172306.jpg",
+        "20180404_133810.jpg", "20180404_133812.jpg", "20180409_193626.jpg", "20180714_153823.jpg",
+        "20181113_234911.jpg", "20190619_084355.jpg", "20190727_144635.jpg", "20190802_130027.jpg",
+        "20190802_130158.jpg", "20191204_080426.jpg", "20191204_080456.jpg", "20191204_080511.jpg",
+        "20201120_184210.jpg", "20201120_184213~2.jpg", "20201120_184214.jpg", "20210716_152122.jpg",
+        "20220811_194007.jpg", "20220812_170538.jpg", "DSC00004.JPG", "DSC00007.jpg",
+        "DSC00065.JPG", "DSC00067.jpg", "DSC00072.JPG", "DSC00075.JPG",
+        "DSC00076(1).JPG", "DSC00076.JPG", "DSC00078.JPG", "DSC00079.JPG",
+        "DSC00080.JPG", "DSC00082.JPG", "DSC00100.JPG", "DSC00142.JPG",
+        "DSC00149-COLLAGE.jpg", "FB_IMG_1503810866712.jpg", "FIL10047.JPG", "FIL10168.JPG",
+        "FIL10203.JPG", "FIL10494.JPG", "IMG_20170812_183633.jpg", "IMG_20170812_183646-COLLAGE.jpg",
+        "IMG_20200321_104548_975.jpg", "IMG_2948.jpg", "IMG_2953.jpg", "Picture 072.jpg",
+        "Screenshot_20201210-075743_OneDrive.jpg", "Screenshot_20210620-000353_Photos.jpg",
+        "Screenshot_20221129-164515_Photos.jpg", "Screenshot_20221129-164945_Photos.jpg",
+        "Screenshot_20240124_131301_Photos.jpg", "Screenshot_20240203_151110_Photos.jpg",
+        "Screenshot_20240203_151355_Photos.jpg", "Screenshot_20240203_151405_Photos.jpg",
+        "Screenshot_20240203_151420_Photos.jpg", "Screenshot_20240827_090658_OneDrive.jpg",
+        "Screenshot_20240827_122235_Facebook.jpg", "Screenshot_20240926_122633_Photos.jpg",
+        "Screenshot_20241119_072537_OneDrive.jpg", "Screenshot_20251014_113536_Photos.jpg",
+        "Screenshot_20251115_115322_Facebook.jpg", "client_PART_1504042892051_IMG_0901.jpg",
+        "client_PART_1505613262587_IMG_20170916_185220.jpg", "hungarian_wine.png", "nanao_banana_pro.png"
     ];
 
     // Clear placeholder
@@ -613,25 +738,85 @@ function launchConfetti() {
     }
 }
 
-// Attach confetti to the hero button
+function initHungarianTranslator() {
+    const interactiveBoxes = document.querySelectorAll('.timeline-content, .comedy-card, .message-card');
+    
+    // Basic mapping for demonstration (representative translations)
+    const translations = {
+        "Business Brilliance": "Üzleti Briliancia",
+        "A Life Well Lived": "Egy Jól Megélt Élet",
+        "A (Terrible) Driver": "Egy (Gyenge) Sofőr",
+        "Sweet Tooth & Quirks": "Édesszájú és Hóbortok",
+        "The \"Hungarian Verdict\"": "A \"Magyar Ítélet\"",
+        "The 3 AM Water Polo Match": "A Hajnali 3 Órás Vízilabda Meccs",
+        "A Good Laugh": "Egy Jó Nevetés",
+        "Mr. Bean": "Bean Úr",
+        "Only Fools and Horses": "Suzi és a többiek",
+        "The Classic \"Laszlo Wince\"": "A Klasszikus \"László-félrearc\"",
+        "A note for Laszlo...": "Üzenet Lászlónak..."
+    };
+
+    interactiveBoxes.forEach(box => {
+        box.style.cursor = 'help';
+        box.setAttribute('title', 'Click to hear in Hungarian!');
+        
+        box.addEventListener('click', (e) => {
+            const heading = box.querySelector('h3')?.innerText || "";
+            const text = translations[heading] || "Isten hozta Magyarországon!";
+            
+            speakLaszlo(text, 'hu-HU');
+            
+            // Visual feedback
+            const originalColor = box.style.borderColor;
+            box.style.borderColor = '#1E8F43'; // Hungarian Green
+            setTimeout(() => box.style.borderColor = originalColor, 1000);
+        });
+    });
+}
+
+// Updated speakLaszlo to support language
+function speakLaszlo(customText = 'I am Laszlo', lang = 'en-US') {
+    const synth = window.speechSynthesis;
+    if (synth.speaking) synth.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(customText);
+    utterance.lang = lang;
+    utterance.rate = 0.8;
+    utterance.pitch = 0.6;
+    
+    const voices = synth.getVoices();
+    let selectedVoice;
+    
+    if (lang === 'hu-HU') {
+        selectedVoice = voices.find(v => v.lang.startsWith('hu'));
+    } else {
+        selectedVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex'));
+    }
+    
+    if (selectedVoice) utterance.voice = selectedVoice;
+    synth.speak(utterance);
+}
+
+// Boat Honk and Pulsing initialization
 document.addEventListener('DOMContentLoaded', () => {
-    const heroBtn = document.querySelector('.btn');
-    if (heroBtn) {
-        heroBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            launchConfetti();
-            speakLaszlo();
+    const boat = document.querySelector('.boat');
+    if (boat) {
+        boat.addEventListener('click', () => {
+            const honk = new Audio('https://www.soundjay.com/transportation/sounds/ship-horn-1.mp3');
+            honk.volume = 0.4;
+            honk.play().catch(() => {});
+            speakLaszlo('Mindenki a fedélzetre!', 'hu-HU');
         });
     }
-
-    // Pulsing glow on the title
+    
+    initHungarianTranslator();
+    
+    // Pulsing title glow
     const title = document.querySelector('.title');
     if (title) {
         setInterval(() => {
-            title.style.textShadow = '0 0 40px rgba(255,46,76,0.6), 0 10px 30px rgba(0,0,0,0.5)';
-            setTimeout(() => {
-                title.style.textShadow = '0 10px 30px rgba(0,0,0,0.5)';
-            }, 1500);
+            title.style.textShadow = '0 0 40px rgba(255,46,76,0.8)';
+            setTimeout(() => title.style.textShadow = '', 1500);
         }, 3000);
     }
 });

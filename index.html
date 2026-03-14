@@ -27,14 +27,17 @@
         <div class="boat">🚢 <span class="flag">🇭🇺</span></div>
     </div>
 
-    <!-- Hungarian Music — multiple fallback sources -->
-    <audio id="bg-music" autoplay loop preload="auto">
-        <source src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Monti_Czardas.ogg" type="audio/ogg">
+    <!-- Hungarian Music — multiple robust fallback sources -->
+    <audio id="bg-music" preload="auto" loop>
         <source src="https://archive.org/download/78_czardas_gypsy-orchestra_monti_gbia0039375a/Czardas%20-%20Gypsy%20Orchestra-restored.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"> <!-- Emergency fallback -->
     </audio>
 
     <!-- Interactive Music Button -->
-    <button id="music-btn" class="music-btn pulse-animation">🎵 Play Hungarian Music</button>
+    <div class="music-controls">
+        <button id="music-btn" class="music-btn pulse-animation">🎵 Play Music & Start Party!</button>
+        <p class="music-tip">(Click to enable audio & animations)</p>
+    </div>
 
     <header class="hero">
         <div class="hero-content">
@@ -170,6 +173,21 @@
                 </div>
             </div>
         </section>
+
+    <!-- Whack-a-Laszlo Game Section -->
+    <section id="game-zone" class="game-section container">
+        <h2 class="section-title">Whack-a-<span>Laszlo</span>!</h2>
+        <p class="section-desc">Click his round head when it pops up! (Score: <span id="score">0</span>)</p>
+        <div class="game-board">
+            <div class="hole" id="hole-1"></div>
+            <div class="hole" id="hole-2"></div>
+            <div class="hole" id="hole-3"></div>
+            <div class="hole" id="hole-4"></div>
+            <div class="hole" id="hole-5"></div>
+            <div class="hole" id="hole-6"></div>
+        </div>
+        <button id="start-game" class="btn">Start Game</button>
+    </section>
 
     <!-- Comedy Corner Section -->
     <section class="comedy-section container">

@@ -562,44 +562,83 @@ body {
     transform: scale(1.02) rotate(-1deg);
 }
 
-/* Music/Party Button Enhancements */
-.music-btn {
+/* Music Controls */
+.music-controls {
     position: fixed;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 46, 76, 0.8);
-    border: 2px solid #ffffff;
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 50px;
-    font-weight: 800;
-    font-size: 1.2rem;
-    cursor: pointer;
     z-index: 1000;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 40px rgba(255, 46, 76, 0.5);
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    text-align: center;
 }
 
-.music-btn:hover {
-    background: var(--success);
-    transform: translateX(-50%) scale(1.1) rotate(3deg);
-    box-shadow: 0 20px 50px rgba(30, 143, 67, 0.6);
+.music-tip {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    animation: fadeInOut 2s infinite;
 }
 
-.music-btn.playing {
-    background: var(--success);
-    animation: pulseGlow 2s infinite;
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
 }
 
-@keyframes pulseGlow {
-    0% { box-shadow: 0 0 0 0 rgba(30, 143, 67, 0.7); }
-    70% { box-shadow: 0 0 0 20px rgba(30, 143, 67, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(30, 143, 67, 0); }
+/* Whack-a-Mole Game */
+.game-section {
+    padding: 6rem 0;
+    text-align: center;
 }
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 600px;
+    margin: 2rem auto;
+    perspective: 1000px;
+}
+
+.hole {
+    width: 150px;
+    height: 150px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid var(--glass-border);
+    box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.mole {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    cursor: crosshair;
+    transition: top 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mole.up {
+    top: 0;
+}
+
+/* Boat Honk Interaction */
+.boat {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.boat:active {
+    transform: scale(1.4) rotate(-10deg);
+}
+
+/* Interactive Glows */
 
 /* Comedy Corner */
 .comedy-section {
@@ -638,6 +677,30 @@ body {
 .comedy-card p {
     color: var(--text-muted);
     font-style: italic;
+}
+
+/* Neural Laszlo Button */
+.neural-btn {
+    background: linear-gradient(135deg, #FF2E4C, #6a11cb);
+    border: none;
+    box-shadow: 0 0 20px rgba(106, 17, 203, 0.4);
+    font-size: 1.2rem;
+    padding: 1.5rem 3rem;
+    transition: all 0.5s ease;
+}
+
+.neural-btn:hover {
+    box-shadow: 0 0 40px rgba(255, 46, 76, 0.8);
+    transform: scale(1.1) rotate(-2deg);
+}
+
+.pulse-glow {
+    animation: neuralPulse 1s ease-in-out;
+}
+
+@keyframes neuralPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 46, 76, 0.7); }
+    100% { box-shadow: 0 0 30px 20px rgba(255, 46, 76, 0); }
 }
 
 /* Floating Photo Styles */
